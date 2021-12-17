@@ -1,3 +1,6 @@
+const lerp = ( a, b, t ) => ( 1 - t ) * a + t * b;
+const map = ( v, a, b, c, d ) => lerp( c, d, ( v - a ) / ( b - a ) );
+
 const fcnv = document.querySelector( ".front" );
 const fctx = fcnv.getContext( "2d" );
 
@@ -8,7 +11,6 @@ let width, height;
 
 let l_sec;
 function draw( ) {
-  //Replatce new Date( ) with new Date((+(new Date( ))*1000)%(1000*60*60*24)) for hyperspeed
   const date = new Date( );
   const n_sec = date.getSeconds( );
   if ( n_sec === l_sec ) {
@@ -83,6 +85,8 @@ function draw( ) {
   bctx.lineCap = "round";
   drawFractalClock( { hour_angle, minute_angle, r, s }, 0, cx, cy, 0 );
   
+  document.documentElement.style.setProperty( "--bg-color-angle", `${ hour_angle + Math.PI }rad` );
+  
   requestAnimationFrame( draw );
 }
 
@@ -108,7 +112,7 @@ function drawFractalClock( consts, scale, sx, sy, angle ) {
   drawFractalClock( consts, scale + 1, hx, hy, ha );
   drawFractalClock( consts, scale + 1, mx, my, ma );
   
-  bctx.strokeStyle = `hsl(${ hour_angle }rad 100% 50%)`;
+  bctx.strokeStyle = `hsl(${ hour_angle }rad 100% ${ map( scale, 0, 15, 25, 100 ) }%)`;
   bctx.lineWidth = w;
   bctx.beginPath( );
   bctx.moveTo( sx, sy );
