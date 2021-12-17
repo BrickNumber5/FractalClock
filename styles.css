@@ -1,3 +1,7 @@
+:root {
+  --bg-color-angle: 225deg;
+}
+
 body, body * {
   all: unset;
 }
@@ -6,10 +10,19 @@ body {
   display: block;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(24deg, #221330 0%, #42146b 100%);
+  background: linear-gradient(24deg, hsl(var(--bg-color-angle) 100% 5%) 0%, hsl(var(--bg-color-angle) 100% 20%) 100%);
 }
 
 .front {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 25%;
+}
+
+.back {
+  position: absolute;
+  inset: 0;
   display: block;
   opacity: 25%;
 }
