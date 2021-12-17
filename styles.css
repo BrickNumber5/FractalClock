@@ -1,0 +1,14 @@
+body, body * {
+  all: unset;
+}
+
+body {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(24deg, #221330 0%, #42146b 100%);
+}
+
+.main {
+  display: block;
+}
