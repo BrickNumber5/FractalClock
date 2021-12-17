@@ -9,9 +9,11 @@ const bctx = bcnv.getContext( "2d" );
 
 let width, height;
 
+let hyperspeed = false, h_start = 0;
+
 let l_sec;
 function draw( ) {
-  const date = new Date( );
+  const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * 1000 ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
   const n_sec = date.getSeconds( );
   if ( n_sec === l_sec ) {
     requestAnimationFrame( draw );
@@ -85,7 +87,7 @@ function draw( ) {
   bctx.lineCap = "round";
   drawFractalClock( { hour_angle, minute_angle, r, s }, 0, cx, cy, 0 );
   
-  document.documentElement.style.setProperty( "--bg-color-angle", `${ hour_angle + Math.PI }rad` );
+  document.querySelector( ":root" ).style.setProperty( "--bg-color-angle", `${ hour_angle + Math.PI }rad` );
   
   requestAnimationFrame( draw );
 }
@@ -128,6 +130,16 @@ function drawFractalClock( consts, scale, sx, sy, angle ) {
 function onresize( ) {
   width = bcnv.width = fcnv.width = window.innerWidth;
   height = bcnv.height = fcnv.height = window.innerHeight;
+  l_sec = null; // To force the image to update
 }
 window.onresize = onresize;
 onresize( );
+
+window.hyperspeed = ( ) => {
+  if ( hyperspeed ) {
+    hyperspeed = false;
+  } else {
+    hyperspeed = true;
+    h_start = +( new Date( ) ) - ( +( new Date( ) ) * 1000 ) % ( 1000 * 60 * 60 * 24 );
+  }
+};

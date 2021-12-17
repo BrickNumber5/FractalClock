@@ -26,3 +26,44 @@ body {
   display: block;
   opacity: 35%;
 }
+
+a {
+  --t-s: 2vw;
+  position: absolute;
+  display: inline-block;
+  color: white;
+  font-size: calc(2 * var(--t-s));
+  cursor: pointer;
+  opacity: 10%;
+  transition: opacity 0.1s;
+}
+
+a::after {
+  content: "";
+  display: block;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  transition: width 0.25s;
+  height: 3px;
+  background-color: white;
+}
+
+a:is(:hover, :focus-within)::after {
+  width: 100%;
+}
+
+a:is(:hover, :focus-within) {
+  opacity: 100%;
+}
+
+.githubButton {
+  left: calc(0.5 * var(--t-s));
+  bottom: calc(0.5 * var(--t-s));
+}
+
+.hyperspeedButton {
+  right: calc(0.5 * var(--t-s));
+  bottom: calc(0.5 * var(--t-s));
+}
