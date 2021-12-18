@@ -28,7 +28,7 @@ body {
 }
 
 a {
-  --t-s: 2vw;
+  --t-s: min(2vw, 2vh);
   position: absolute;
   display: inline-block;
   color: white;
