@@ -1,3 +1,5 @@
+const VERSION = "1.0.2";
+
 const lerp = ( a, b, t ) => ( 1 - t ) * a + t * b;
 const map = ( v, a, b, c, d ) => lerp( c, d, ( v - a ) / ( b - a ) );
 
@@ -578,3 +580,8 @@ window.resetOptions = ( ) => {
   ringThickness = 60;
   store_options( );
 };
+
+{
+  const [ x, y, z ] = VERSION.split( "." );
+  document.querySelector( ".versionNumber" ).innerHTML = `<span>Fractal Clock v</span><span class="notransparent">${ x }</span><span>.</span><span class="notransparent">${ y }</span><span>.</span><span class="notransparent">${ z }</span>`;
+}

@@ -93,7 +93,7 @@ a:is(:hover, :focus-within) {
   display: block;
 }
 
-.optionsPane > span, .optionsPane div > span {
+.optionsPane span:not(.notransparent), .optionsPane div span:not(.notransparent) {
   opacity: 20%;
 }
 
@@ -121,3 +121,7 @@ a:is(:hover, :focus-within) {
 
 .optionsPane button::before { content: "["; opacity: 80%; }
 .optionsPane button::after { content: "]"; opacity: 80%; }
+
+.versionNumber span.notransparent {
+  opacity: 80%;
+}
