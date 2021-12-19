@@ -408,9 +408,6 @@ function drawFractalClock( consts, scale, sx, sy, angle ) {
     sy + r * 0.85 * Math.sin( ma - Math.PI / 2 ) / ( 1.5 ** scale )
   ];
   
-  drawFractalClock( consts, scale + 1, hx, hy, ha );
-  drawFractalClock( consts, scale + 1, mx, my, ma );
-  
   bctx.strokeStyle = `hsl(${ hour_angle }rad 100% ${ map( scale, 0, 15, 25, 100 ) }%)`;
   bctx.lineWidth = w;
   bctx.beginPath( );
@@ -422,6 +419,9 @@ function drawFractalClock( consts, scale, sx, sy, angle ) {
   bctx.moveTo( sx, sy );
   bctx.lineTo( mx, my );
   bctx.stroke( );
+  
+  drawFractalClock( consts, scale + 1, hx, hy, ha );
+  drawFractalClock( consts, scale + 1, mx, my, ma );
 }
 
 function onresize( ) {
