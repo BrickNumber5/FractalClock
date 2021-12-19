@@ -1,3 +1,5 @@
+const VERSION = "1.0.2";
+
 const lerp = ( a, b, t ) => ( 1 - t ) * a + t * b;
 const map = ( v, a, b, c, d ) => lerp( c, d, ( v - a ) / ( b - a ) );
 
@@ -11,7 +13,7 @@ let width, height;
 
 let hyperspeed = false, h_speed = 1000, h_start = 0;
 
-let showClock = true;
+let showClock = true, showSecondHand = true;
 
 let detail = 10;
 
@@ -21,9 +23,13 @@ let showTickmarks = false;
 
 let showNumbers = false, numberMode = 0;
 
-let showDigital = false, digitalMode = 0;
+let showDigital = false, digitalMode = 0, showDigitalSeconds = true;
 
 let ringThickness = 60;
+
+let backgroundMode = 0;
+
+let glows = false;
 
 let l_sec;
 function draw( ) {
@@ -86,24 +92,26 @@ function draw( ) {
     if ( showNumbers ) drawNumbers( { cx, cy, r, s } );
     
     // Second Hand
-    fctx.strokeStyle = "#f88";
-    fctx.lineWidth = s >> 1;
-    fctx.beginPath( );
-    fctx.moveTo( cx + r * -0.3 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.3 * Math.sin( second_angle - Math.PI / 2 ) );
-    fctx.lineTo( cx + r * 0.9 * Math.cos( second_angle - Math.PI / 2 ), cy + r * 0.9 * Math.sin( second_angle - Math.PI / 2 ) );
-    fctx.stroke( );
-    
-    fctx.lineWidth = s;
-    fctx.beginPath( );
-    fctx.moveTo( cx + r * -0.35 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.35 * Math.sin( second_angle - Math.PI / 2 ) );
-    fctx.lineTo( cx + r * -0.15 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( second_angle - Math.PI / 2 ) );
-    fctx.stroke( );
-    
-    fctx.lineWidth = s;
-    fctx.beginPath( );
-    fctx.moveTo( cx, cy );
-    fctx.lineTo( cx, cy );
-    fctx.stroke( );
+    if ( showSecondHand ) {
+      fctx.strokeStyle = "#f88";
+      fctx.lineWidth = s >> 1;
+      fctx.beginPath( );
+      fctx.moveTo( cx + r * -0.3 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.3 * Math.sin( second_angle - Math.PI / 2 ) );
+      fctx.lineTo( cx + r * 0.9 * Math.cos( second_angle - Math.PI / 2 ), cy + r * 0.9 * Math.sin( second_angle - Math.PI / 2 ) );
+      fctx.stroke( );
+      
+      fctx.lineWidth = s;
+      fctx.beginPath( );
+      fctx.moveTo( cx + r * -0.35 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.35 * Math.sin( second_angle - Math.PI / 2 ) );
+      fctx.lineTo( cx + r * -0.15 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( second_angle - Math.PI / 2 ) );
+      fctx.stroke( );
+      
+      fctx.lineWidth = s;
+      fctx.beginPath( );
+      fctx.moveTo( cx, cy );
+      fctx.lineTo( cx, cy );
+      fctx.stroke( );
+    }
   }
   
   if ( showDigital ) drawDigitalDisplay( { cx, cy, r, s, date } );
@@ -114,6 +122,7 @@ function draw( ) {
   drawFractalClock( { hour_angle, minute_angle, r, s }, 0, cx, cy, 0 );
   
   document.querySelector( ":root" ).style.setProperty( "--bg-color-angle", `${ hour_angle + Math.PI }rad` );
+  document.querySelector( ":root" ).style.setProperty( "--fg-color-angle", `${ hour_angle }rad` );
   
   requestAnimationFrame( draw );
 }
@@ -371,15 +380,15 @@ function drawDigitalDisplay( consts ) {
         date.getHours( ).toString( ).padStart( 2, 0 )
       }:${
         date.getMinutes( ).toString( ).padStart( 2, 0 )
-      }:${
-        date.getSeconds( ).toString( ).padStart( 2, 0 )
+      }${
+        showDigitalSeconds ? ":" + date.getSeconds( ).toString( ).padStart( 2, 0 ) : ""
       }`
     : `${
         ( date.getHours( ) + 11 ) % 12 + 1
       }:${
         date.getMinutes( ).toString( ).padStart( 2, 0 )
-      }:${
-        date.getSeconds( ).toString( ).padStart( 2, 0 )
+      }${
+        showDigitalSeconds ? ":" + date.getSeconds( ).toString( ).padStart( 2, 0 ) : ""
       } ${ date.getHours( ) >= 12 ? "PM" : "AM" }`;
   fctx.fillText( t, x, y );
   fctx.strokeText( t, x, y );
@@ -402,9 +411,6 @@ function drawFractalClock( consts, scale, sx, sy, angle ) {
     sy + r * 0.85 * Math.sin( ma - Math.PI / 2 ) / ( 1.5 ** scale )
   ];
   
-  drawFractalClock( consts, scale + 1, hx, hy, ha );
-  drawFractalClock( consts, scale + 1, mx, my, ma );
-  
   bctx.strokeStyle = `hsl(${ hour_angle }rad 100% ${ map( scale, 0, 15, 25, 100 ) }%)`;
   bctx.lineWidth = w;
   bctx.beginPath( );
@@ -416,6 +422,9 @@ function drawFractalClock( consts, scale, sx, sy, angle ) {
   bctx.moveTo( sx, sy );
   bctx.lineTo( mx, my );
   bctx.stroke( );
+  
+  drawFractalClock( consts, scale + 1, hx, hy, ha );
+  drawFractalClock( consts, scale + 1, mx, my, ma );
 }
 
 function onresize( ) {
@@ -456,6 +465,7 @@ window.setHyperspeedSpeed = e => {
   if ( n !== n ) n = 1000;
   if ( n < 1 ) n = 1;
   if ( n > 10000 ) n = 10000;
+  h_start = h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) - ( +( new Date( ) ) * n ) % ( 1000 * 60 * 60 * 24 );
   h_speed = n;
   store_options( );
 };
@@ -522,6 +532,26 @@ window.setRingThickness = e => {
   store_options( );
 };
 
+window.toggleBackgroundMode = e => {
+  backgroundMode = 1 - backgroundMode;
+  store_options( );
+};
+
+window.toggleDigitalSeconds = e => {
+  showDigitalSeconds = !showDigitalSeconds;
+  store_options( );
+};
+
+window.toggleSecondHand = e => {
+  showSecondHand = !showSecondHand;
+  store_options( );
+};
+
+window.toggleGlow = e => {
+  glows = !glows;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
@@ -535,6 +565,10 @@ function load_options( ) {
   numberMode = opts.numberMode ?? 0;
   digitalMode = opts.digitalMode ?? 0;
   ringThickness = opts.ringThickness ?? 60;
+  backgroundMode = opts.backgroundMode ?? 0;
+  showDigitalSeconds = opts.showDigitalSeconds ?? true;
+  showSecondHand = opts.showSecondHand ?? true;
+  glows = opts.glows ?? false;
   store_options( );
 }
 
@@ -542,7 +576,21 @@ load_options( );
 
 function store_options( ) {
   const opts = {
-    h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks, showNumbers, numberMode, showDigital, digitalMode, ringThickness
+    h_speed,
+    detail,
+    showClock,
+    clockOpacity,
+    fractalOpacity,
+    showTickmarks,
+    showNumbers,
+    numberMode,
+    showDigital,
+    digitalMode,
+    ringThickness,
+    backgroundMode,
+    showDigitalSeconds,
+    showSecondHand,
+    glows
   };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
@@ -561,6 +609,12 @@ function store_options( ) {
   document.querySelector( ".dDigitalMode" ).style.display = showDigital ? "" : "none";
   document.querySelector( ".bToggleDigitalMode > span" ).innerText = digitalMode ? "AM/PM" : "24 Hour";
   document.querySelector( ".iRingThickness" ).value = ringThickness;
+  document.querySelector( ".bToggleBackgroundMode > span" ).innerText = backgroundMode ? "colorful" : "grey";
+  document.body.style.setProperty( "background", backgroundMode ? "linear-gradient(24deg, hsl(0 0% 5%) 0%, hsl(0 0% 15%) 100%)" : "" );
+  document.querySelector( ".bToggleDigitalSeconds > span" ).innerText = showDigitalSeconds ? "hide" : "show";
+  document.querySelector( ".bToggleSecondHand > span" ).innerText = showSecondHand ? "hide" : "show";
+  document.querySelector( ".bToggleGlow > span" ).innerText = glows ? "disable" : "enable";
+  document.querySelector( ".back" ).style.setProperty( "filter", glows ? "drop-shadow(0 0 var(--t-s) hsl(var(--fg-color-angle) 100% 75%))" : "" );
   l_sec = null; // To force the image to update
 }
 
@@ -576,5 +630,14 @@ window.resetOptions = ( ) => {
   showDigital = false;
   digitalMode = 0;
   ringThickness = 60;
+  backgroundMode = 0;
+  showDigitalSeconds = true;
+  showSecondHand = true;
+  glows = false;
   store_options( );
 };
+
+{
+  const [ x, y, z ] = VERSION.split( "." );
+  document.querySelector( ".versionNumber" ).innerHTML = `<span>Fractal Clock v</span><span class="notransparent">${ x }</span><span>.</span><span class="notransparent">${ y }</span><span>.</span><span class="notransparent">${ z }</span>`;
+}
