@@ -29,6 +29,8 @@ let ringThickness = 60;
 
 let backgroundMode = 0;
 
+let glows = false;
+
 let l_sec;
 function draw( ) {
   const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
@@ -120,6 +122,7 @@ function draw( ) {
   drawFractalClock( { hour_angle, minute_angle, r, s }, 0, cx, cy, 0 );
   
   document.querySelector( ":root" ).style.setProperty( "--bg-color-angle", `${ hour_angle + Math.PI }rad` );
+  document.querySelector( ":root" ).style.setProperty( "--fg-color-angle", `${ hour_angle }rad` );
   
   requestAnimationFrame( draw );
 }
@@ -544,6 +547,11 @@ window.toggleSecondHand = e => {
   store_options( );
 };
 
+window.toggleGlow = e => {
+  glows = !glows;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
@@ -560,6 +568,7 @@ function load_options( ) {
   backgroundMode = opts.backgroundMode ?? 0;
   showDigitalSeconds = opts.showDigitalSeconds ?? true;
   showSecondHand = opts.showSecondHand ?? true;
+  glows = opts.glows ?? false;
   store_options( );
 }
 
@@ -580,7 +589,8 @@ function store_options( ) {
     ringThickness,
     backgroundMode,
     showDigitalSeconds,
-    showSecondHand
+    showSecondHand,
+    glows
   };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
@@ -603,6 +613,8 @@ function store_options( ) {
   document.body.style.setProperty( "background", backgroundMode ? "linear-gradient(24deg, hsl(0 0% 5%) 0%, hsl(0 0% 15%) 100%)" : "" );
   document.querySelector( ".bToggleDigitalSeconds > span" ).innerText = showDigitalSeconds ? "hide" : "show";
   document.querySelector( ".bToggleSecondHand > span" ).innerText = showSecondHand ? "hide" : "show";
+  document.querySelector( ".bToggleGlow > span" ).innerText = glows ? "disable" : "enable";
+  document.querySelector( ".back" ).style.setProperty( "filter", glows ? "drop-shadow(0 0 var(--t-s) hsl(var(--fg-color-angle) 100% 75%))" : "" );
   l_sec = null; // To force the image to update
 }
 
@@ -621,6 +633,7 @@ window.resetOptions = ( ) => {
   backgroundMode = 0;
   showDigitalSeconds = true;
   showSecondHand = true;
+  glows = false;
   store_options( );
 };
 

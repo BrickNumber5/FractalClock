@@ -1,4 +1,5 @@
 :root {
+  --fg-color-angle: 3.357rad;
   --bg-color-angle: 3.927rad;
   --t-s: min(2vw, 1.75vh);
   --clockOpacity: 25%;
