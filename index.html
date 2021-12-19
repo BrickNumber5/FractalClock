@@ -19,9 +19,8 @@
       <div class="optionsPane" style="display: none;">
         <span>Detail: </span><input type="number" class="small iDetail" value="10" min="1" max="50" step="1" onchange="setDetail(this);"></input><br/>
         <span>Hyperspeed Speedup: </span><input type="number" class="big iH_speed" value="1000" min="1" max="10000" step="1" onchange="setHyperspeedSpeed(this);"></input><span>x</span><br/>
-        <button onclick="toggleClock();" class="bToggleClock"><span>hide</span></button><span> clock</span><br/>
+        <button onclick="toggleClock();" class="bToggleClock"><span>hide</span></button><span> analog display</span><br/>
         <div class="clockOptions">
-          <span>Clock Opacity: </span><input type="number" class="small iClockOpacity" value="25" min="0" max="100" step="1" onchange="setClockOpacity(this);"></input><span>%</span><br/>
           <span>Ring Thickness: </span><input type="number" class="small iRingThickness" value="60" min="0" max="100" step="1" onchange="setRingThickness(this);"></input><span>%</span><br/>
           <button onclick="toggleTickmarks();" class="bToggleTickmarks"><span>show</span></button><span> tickmarks</span><br/>
           <button onclick="toggleNumbers(this);" class="bToggleNumbers"><span>show</span></button><span> numbers</span>
@@ -33,6 +32,7 @@
         <div class="dDigitalMode" style="display: none;">
           <span>Switch to </span><button onclick="toggleDigitalMode();" class="bToggleDigitalMode"><span>24 Hour</span></button><span> display</span><br/>
         </div>
+        <span>Clock Opacity: </span><input type="number" class="small iClockOpacity" value="25" min="0" max="100" step="1" onchange="setClockOpacity(this);"></input><span>%</span><br/>
         <span>Fractal Opacity: </span><input type="number" class="small iFractalOpacity" value="35" min="0" max="100" step="1" onchange="setFractalOpacity(this);"></input><span>%</span><br/>
         <span class="notransparent versionNumber"><span>Fractal Clock v</span><span class="notransparent">X</span><span>.</span><span class="notransparent">Y</span><span>.</span><span class="notransparent">Z</span></span><br/>
         <button onclick="resetOptions();"><span>reset</span></button>
