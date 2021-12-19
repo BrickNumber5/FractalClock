@@ -23,7 +23,7 @@ let showTickmarks = false;
 
 let showNumbers = false, numberMode = 0;
 
-let showDigital = false, digitalMode = 0;
+let showDigital = false, digitalMode = 0, showDigitalSeconds = true;
 
 let ringThickness = 60;
 
@@ -375,15 +375,15 @@ function drawDigitalDisplay( consts ) {
         date.getHours( ).toString( ).padStart( 2, 0 )
       }:${
         date.getMinutes( ).toString( ).padStart( 2, 0 )
-      }:${
-        date.getSeconds( ).toString( ).padStart( 2, 0 )
+      }${
+        showDigitalSeconds ? ":" + date.getSeconds( ).toString( ).padStart( 2, 0 ) : ""
       }`
     : `${
         ( date.getHours( ) + 11 ) % 12 + 1
       }:${
         date.getMinutes( ).toString( ).padStart( 2, 0 )
-      }:${
-        date.getSeconds( ).toString( ).padStart( 2, 0 )
+      }${
+        showDigitalSeconds ? ":" + date.getSeconds( ).toString( ).padStart( 2, 0 ) : ""
       } ${ date.getHours( ) >= 12 ? "PM" : "AM" }`;
   fctx.fillText( t, x, y );
   fctx.strokeText( t, x, y );
@@ -532,6 +532,11 @@ window.toggleBackgroundMode = e => {
   store_options( );
 };
 
+window.toggleDigitalSeconds = e => {
+  showDigitalSeconds = !showDigitalSeconds;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
@@ -546,6 +551,7 @@ function load_options( ) {
   digitalMode = opts.digitalMode ?? 0;
   ringThickness = opts.ringThickness ?? 60;
   backgroundMode = opts.backgroundMode ?? 0;
+  showDigitalSeconds = opts.showDigitalSeconds ?? true;
   store_options( );
 }
 
@@ -564,7 +570,8 @@ function store_options( ) {
     showDigital,
     digitalMode,
     ringThickness,
-    backgroundMode
+    backgroundMode,
+    showDigitalSeconds
   };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
@@ -585,6 +592,7 @@ function store_options( ) {
   document.querySelector( ".iRingThickness" ).value = ringThickness;
   document.querySelector( ".bToggleBackgroundMode > span" ).innerText = backgroundMode ? "colorful" : "grey";
   document.body.style.setProperty( "background", backgroundMode ? "linear-gradient(24deg, hsl(0 0% 5%) 0%, hsl(0 0% 15%) 100%)" : "" );
+  document.querySelector( ".bToggleDigitalSeconds > span" ).innerText = showDigitalSeconds ? "hide" : "show";
   l_sec = null; // To force the image to update
 }
 
@@ -601,6 +609,7 @@ window.resetOptions = ( ) => {
   digitalMode = 0;
   ringThickness = 60;
   backgroundMode = 0;
+  showDigitalSeconds = true;
   store_options( );
 };
 
