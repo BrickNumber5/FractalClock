@@ -189,7 +189,7 @@ function drawTickmarks( consts ) {
 
 function drawNumbers( consts ) {
   const { cx, cy, r, s } = consts;
-  let d = ( ringThickness === 0 ) ? showTickmarks ? 0.725 : 1 : showTickmarks ? 0.65 : 1 - ringThickness * 0.001 - 0.1;
+  let d = ( ringThickness === 0 ) ? showTickmarks ? 0.725 : 1 : showTickmarks ? 0.65 : 1 - ringThickness * 0.0005 - 0.15;
   if ( numberMode === 0 ) {
     fctx.lineWidth = s >> 1;
     fctx.strokeStyle = "#fff";
@@ -359,7 +359,7 @@ function drawNumbers( consts ) {
     fctx.textAlign = "center";
     fctx.textBaseline = "middle";
     for ( let i = 0; i < 12; i++ ) {
-      const x = cx + d * r * Math.cos( Math.PI * i / 6 ), y = cy + d * r * Math.sin( Math.PI * i / 6 );
+      const x = cx + d * r * Math.cos( Math.PI * i / 6 ), y = cy + d * r * Math.sin( Math.PI * i / 6 ) + 0.25 * s;
       fctx.fillText( ( i + 2 ) % 12 + 1, x, y );
       fctx.strokeText( ( i + 2 ) % 12 + 1, x, y );
     }
