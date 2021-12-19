@@ -21,6 +21,8 @@ let showTickmarks = false;
 
 let showNumbers = false, numberMode = 0;
 
+let showDigital = false, digitalMode = 0;
+
 let l_sec;
 function draw( ) {
   const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
@@ -98,6 +100,8 @@ function draw( ) {
     fctx.lineTo( cx, cy );
     fctx.stroke( );
   }
+  
+  if ( showDigital ) drawDigitalDisplay( { cx, cy, r, s, date } );
   
   // Draw Fractal
   bctx.clearRect( 0, 0, width, height );
@@ -300,15 +304,43 @@ function drawNumbers( consts ) {
     fctx.lineWidth = s >> 2;
     fctx.strokeStyle = "#fff";
     fctx.fillStyle = "#fff";
+    fctx.font = `${ 2.5 * s }px 'Open Sans', sans-serif`;
+    fctx.textAlign = "center";
+    fctx.textBaseline = "middle";
     for ( let i = 0; i < 12; i++ ) {
-      fctx.font = `${ 2.5 * s }px 'Open Sans', sans-serif`; // TODO: Replace
-      fctx.textAlign = "center";
-      fctx.textBaseline = "middle";
       const x = cx + d * r * Math.cos( Math.PI * i / 6 ), y = cy + d * r * Math.sin( Math.PI * i / 6 );
       fctx.fillText( ( i + 2 ) % 12 + 1, x, y );
       fctx.strokeText( ( i + 2 ) % 12 + 1, x, y );
     }
   }
+}
+
+function drawDigitalDisplay( consts ) {
+  const { cx, cy, r, s, date } = consts;
+  const x = cx, y = showClock ? cy + r * 1.2 : cy;
+  fctx.lineWidth = s >> 2;
+  fctx.strokeStyle = "#fff";
+  fctx.fillStyle = "#fff";
+  fctx.font = `${ 2.5 * s }px 'Open Sans', sans-serif`;
+  fctx.textAlign = "center";
+  fctx.textBaseline = "middle";
+  const t = digitalMode ?
+      `${
+        date.getHours( ).toString( ).padStart( 2, 0 )
+      }:${
+        date.getMinutes( ).toString( ).padStart( 2, 0 )
+      }:${
+        date.getSeconds( ).toString( ).padStart( 2, 0 )
+      }`
+    : `${
+        ( date.getHours( ) + 11 ) % 12 + 1
+      }:${
+        date.getMinutes( ).toString( ).padStart( 2, 0 )
+      }:${
+        date.getSeconds( ).toString( ).padStart( 2, 0 )
+      } ${ date.getHours( ) >= 12 ? "PM" : "AM" }`;
+  fctx.fillText( t, x, y );
+  fctx.strokeText( t, x, y );
 }
 
 function drawFractalClock( consts, scale, sx, sy, angle ) {
@@ -426,6 +458,16 @@ window.toggleNumberMode = e => {
   store_options( );
 };
 
+window.toggleDigital = e => {
+  showDigital = !showDigital;
+  store_options( );
+};
+
+window.toggleDigitalMode = e => {
+  digitalMode = 1 - digitalMode;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
@@ -433,16 +475,18 @@ function load_options( ) {
   showClock = opts.showClock ?? true;
   showTickmarks = opts.showTickmarks ?? false;
   showNumbers = opts.showNumbers ?? false;
+  showDigital = opts.showDigital ?? false;
   clockOpacity = opts.clockOpacity ?? 25;
   fractalOpacity = opts.fractalOpacity ?? 35;
   numberMode = opts.numberMode ?? 0;
+  digitalMode = opts.digitalMode ?? 0;
   store_options( );
 }
 
 load_options( );
 
 function store_options( ) {
-  const opts = { h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks, showNumbers, numberMode };
+  const opts = { h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks, showNumbers, numberMode, showDigital, digitalMode };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
   document.querySelector( ".iDetail" ).value = detail;
@@ -456,6 +500,9 @@ function store_options( ) {
   document.querySelector( ".bToggleNumbers > span" ).innerText = showNumbers ? "hide" : "show";
   document.querySelector( ".dNumberMode" ).style.display = showNumbers ? "" : "none";
   document.querySelector( ".bToggleNumberMode > span" ).innerText = numberMode ? "roman" : "arabic";
+  document.querySelector( ".bToggleDigital > span" ).innerText = showDigital ? "hide" : "show";
+  document.querySelector( ".dDigitalMode" ).style.display = showDigital ? "" : "none";
+  document.querySelector( ".bToggleDigitalMode > span" ).innerText = digitalMode ? "AM/PM" : "24 Hour";
   l_sec = null; // To force the image to update
 }
 
@@ -468,5 +515,7 @@ window.resetOptions = ( ) => {
   showTickmarks = false;
   showNumbers = false;
   numberMode = 0;
+  showDigital = false;
+  digitalMode = 0;
   store_options( );
 };
