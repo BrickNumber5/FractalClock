@@ -23,6 +23,8 @@ let showNumbers = false, numberMode = 0;
 
 let showDigital = false, digitalMode = 0;
 
+let ringThickness = 60;
+
 let l_sec;
 function draw( ) {
   const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
@@ -46,16 +48,19 @@ function draw( ) {
   const hour_angle   = 2 * Math.PI * ( date.getHours( ) % 12 ) / 12 + minute_angle / 12;
   
   if ( showClock ) {
+    fctx.strokeStyle = "#fff";
+    fctx.lineJoin = "round";
+    fctx.lineCap = "round";
     
     // Draw the Circle
-    fctx.strokeStyle = "#fff";
-    fctx.lineWidth = s;
-    fctx.lineCap = "round";
-    fctx.lineJoin = "round";
+    if ( ringThickness > 0 ) {
+      fctx.lineWidth = ringThickness * s / 100;
+      fctx.beginPath( );
+      fctx.arc( cx, cy, r, 0, 2 * Math.PI );
+      fctx.stroke( );
+    }
     
-    fctx.beginPath( );
-    fctx.arc( cx, cy, r, 0, 2 * Math.PI );
-    fctx.stroke( );
+    fctx.lineWidth = s;
     
     // Minute Hand
     fctx.beginPath( );
@@ -117,28 +122,65 @@ requestAnimationFrame( draw );
 
 function drawTickmarks( consts ) {
   const { cx, cy, r, s } = consts;
-  fctx.lineWidth = s * 0.75;
   fctx.strokeStyle = "#fff";
-  for ( let i = 0; i < 12; i++ ) {
-    fctx.beginPath( );
-    fctx.moveTo( cx + r * Math.cos( Math.PI * i / 6 ), cy + r * Math.sin( Math.PI * i / 6 ) );
-    fctx.lineTo( cx + 0.85 * r * Math.cos( Math.PI * i / 6 ), cy + 0.85 * r * Math.sin( Math.PI * i / 6 ) );
-    fctx.stroke( );
-  }
-  
-  fctx.lineWidth = s >> 1;
-  for ( let i = 0; i < 60; i++ ) {
-    if ( i % 5 === 0 ) continue;
-    fctx.beginPath( );
-    fctx.moveTo( cx + r * Math.cos( Math.PI * i / 30 ), cy + r * Math.sin( Math.PI * i / 30 ) );
-    fctx.lineTo( cx + 0.9 * r * Math.cos( Math.PI * i / 30 ), cy + 0.9 * r * Math.sin( Math.PI * i / 30 ) );
-    fctx.stroke( );
+  if ( ringThickness > 0 ) {
+    fctx.lineCap = "butt";
+    fctx.lineWidth = s * 0.75;
+    for ( let i = 0; i < 12; i++ ) {
+      fctx.beginPath( );
+      fctx.moveTo( cx + r * Math.cos( Math.PI * i / 6 ), cy + r * Math.sin( Math.PI * i / 6 ) );
+      fctx.lineTo( cx + 0.85 * r * Math.cos( Math.PI * i / 6 ), cy + 0.85 * r * Math.sin( Math.PI * i / 6 ) );
+      fctx.stroke( );
+    }
+    
+    fctx.lineWidth = s >> 1;
+    for ( let i = 0; i < 60; i++ ) {
+      if ( i % 5 === 0 ) continue;
+      fctx.beginPath( );
+      fctx.moveTo( cx + r * Math.cos( Math.PI * i / 30 ), cy + r * Math.sin( Math.PI * i / 30 ) );
+      fctx.lineTo( cx + 0.9 * r * Math.cos( Math.PI * i / 30 ), cy + 0.9 * r * Math.sin( Math.PI * i / 30 ) );
+      fctx.stroke( );
+    }
+    fctx.lineCap = "round";
+    fctx.lineWidth = s * 0.75;
+    for ( let i = 0; i < 12; i++ ) {
+      fctx.beginPath( );
+      fctx.moveTo( cx + 0.85 * r * Math.cos( Math.PI * i / 6 ), cy + 0.85 * r * Math.sin( Math.PI * i / 6 ) );
+      fctx.lineTo( cx + 0.85 * r * Math.cos( Math.PI * i / 6 ), cy + 0.85 * r * Math.sin( Math.PI * i / 6 ) );
+      fctx.stroke( );
+    }
+    
+    fctx.lineWidth = s >> 1;
+    for ( let i = 0; i < 60; i++ ) {
+      if ( i % 5 === 0 ) continue;
+      fctx.beginPath( );
+      fctx.moveTo( cx + 0.9 * r * Math.cos( Math.PI * i / 30 ), cy + 0.9 * r * Math.sin( Math.PI * i / 30 ) );
+      fctx.lineTo( cx + 0.9 * r * Math.cos( Math.PI * i / 30 ), cy + 0.9 * r * Math.sin( Math.PI * i / 30 ) );
+      fctx.stroke( );
+    }
+  } else {
+    fctx.lineWidth = s * 0.75;
+    for ( let i = 0; i < 12; i++ ) {
+      fctx.beginPath( );
+      fctx.moveTo( cx + 1.075 * r * Math.cos( Math.PI * i / 6 ), cy + 1.075 * r * Math.sin( Math.PI * i / 6 ) );
+      fctx.lineTo( cx + 0.925 * r * Math.cos( Math.PI * i / 6 ), cy + 0.925 * r * Math.sin( Math.PI * i / 6 ) );
+      fctx.stroke( );
+    }
+    
+    fctx.lineWidth = s >> 1;
+    for ( let i = 0; i < 60; i++ ) {
+      if ( i % 5 === 0 ) continue;
+      fctx.beginPath( );
+      fctx.moveTo( cx + 1.05 * r * Math.cos( Math.PI * i / 30 ), cy + 1.05 * r * Math.sin( Math.PI * i / 30 ) );
+      fctx.lineTo( cx + 0.95 * r * Math.cos( Math.PI * i / 30 ), cy + 0.95 * r * Math.sin( Math.PI * i / 30 ) );
+      fctx.stroke( );
+    }
   }
 }
 
 function drawNumbers( consts ) {
   const { cx, cy, r, s } = consts;
-  let d = showTickmarks ? 0.65 : 0.8;
+  let d = ( ringThickness === 0 ) ? showTickmarks ? 0.725 : 1 : showTickmarks ? 0.65 : 1 - ringThickness * 0.001 - 0.1;
   if ( numberMode === 0 ) {
     fctx.lineWidth = s >> 1;
     fctx.strokeStyle = "#fff";
@@ -470,6 +512,16 @@ window.toggleDigitalMode = e => {
   store_options( );
 };
 
+window.setRingThickness = e => {
+  let n = +e.value;
+  if ( n !== n ) n = 60;
+  if ( n < 0 ) n = 0;
+  if ( n > 0 && n < 20 ) n = ( ringThickness === 0 ) ? 20 : 0;
+  if ( n > 100 ) n = 100;
+  ringThickness = n;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
@@ -482,13 +534,16 @@ function load_options( ) {
   fractalOpacity = opts.fractalOpacity ?? 35;
   numberMode = opts.numberMode ?? 0;
   digitalMode = opts.digitalMode ?? 0;
+  ringThickness = opts.ringThickness ?? 60;
   store_options( );
 }
 
 load_options( );
 
 function store_options( ) {
-  const opts = { h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks, showNumbers, numberMode, showDigital, digitalMode };
+  const opts = {
+    h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks, showNumbers, numberMode, showDigital, digitalMode, ringThickness
+  };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
   document.querySelector( ".iDetail" ).value = detail;
@@ -505,6 +560,7 @@ function store_options( ) {
   document.querySelector( ".bToggleDigital > span" ).innerText = showDigital ? "hide" : "show";
   document.querySelector( ".dDigitalMode" ).style.display = showDigital ? "" : "none";
   document.querySelector( ".bToggleDigitalMode > span" ).innerText = digitalMode ? "AM/PM" : "24 Hour";
+  document.querySelector( ".iRingThickness" ).value = ringThickness;
   l_sec = null; // To force the image to update
 }
 
@@ -519,5 +575,6 @@ window.resetOptions = ( ) => {
   numberMode = 0;
   showDigital = false;
   digitalMode = 0;
+  ringThickness = 60;
   store_options( );
 };
