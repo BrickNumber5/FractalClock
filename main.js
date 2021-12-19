@@ -27,6 +27,8 @@ let showDigital = false, digitalMode = 0;
 
 let ringThickness = 60;
 
+let backgroundMode = 0;
+
 let l_sec;
 function draw( ) {
   const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
@@ -525,6 +527,11 @@ window.setRingThickness = e => {
   store_options( );
 };
 
+window.toggleBackgroundMode = e => {
+  backgroundMode = 1 - backgroundMode;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
@@ -538,6 +545,7 @@ function load_options( ) {
   numberMode = opts.numberMode ?? 0;
   digitalMode = opts.digitalMode ?? 0;
   ringThickness = opts.ringThickness ?? 60;
+  backgroundMode = opts.backgroundMode ?? 0;
   store_options( );
 }
 
@@ -545,7 +553,18 @@ load_options( );
 
 function store_options( ) {
   const opts = {
-    h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks, showNumbers, numberMode, showDigital, digitalMode, ringThickness
+    h_speed,
+    detail,
+    showClock,
+    clockOpacity,
+    fractalOpacity,
+    showTickmarks,
+    showNumbers,
+    numberMode,
+    showDigital,
+    digitalMode,
+    ringThickness,
+    backgroundMode
   };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
@@ -564,6 +583,8 @@ function store_options( ) {
   document.querySelector( ".dDigitalMode" ).style.display = showDigital ? "" : "none";
   document.querySelector( ".bToggleDigitalMode > span" ).innerText = digitalMode ? "AM/PM" : "24 Hour";
   document.querySelector( ".iRingThickness" ).value = ringThickness;
+  document.querySelector( ".bToggleBackgroundMode > span" ).innerText = backgroundMode ? "colorful" : "grey";
+  document.body.style.setProperty( "background", backgroundMode ? "linear-gradient(24deg, hsl(0 0% 5%) 0%, hsl(0 0% 15%) 100%)" : "" );
   l_sec = null; // To force the image to update
 }
 
@@ -579,6 +600,7 @@ window.resetOptions = ( ) => {
   showDigital = false;
   digitalMode = 0;
   ringThickness = 60;
+  backgroundMode = 0;
   store_options( );
 };
 
