@@ -1,4 +1,4 @@
-const VERSION = "1.0.2";
+const VERSION = "1.1.0";
 
 const lerp = ( a, b, t ) => ( 1 - t ) * a + t * b;
 const map = ( v, a, b, c, d ) => lerp( c, d, ( v - a ) / ( b - a ) );
