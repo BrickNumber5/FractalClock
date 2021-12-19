@@ -1,6 +1,6 @@
 :root {
   --bg-color-angle: 3.927rad;
-  --t-s: min(2vw, 2vh);
+  --t-s: min(2vw, 1.75vh);
   --clockOpacity: 25%;
   --fractalOpacity: 35%;
 }
