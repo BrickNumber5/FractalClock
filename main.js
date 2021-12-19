@@ -17,6 +17,8 @@ let detail = 10;
 
 let clockOpacity = 25, fractalOpacity = 35;
 
+let showTickmarks = false;
+
 let l_sec;
 function draw( ) {
   const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
@@ -70,6 +72,8 @@ function draw( ) {
     fctx.lineTo( cx, cy );
     fctx.stroke( );
     
+    if ( showTickmarks ) drawTickmarks( { cx, cy, r, s } );
+    
     // Second Hand
     fctx.strokeStyle = "#f88";
     fctx.lineWidth = s >> 1;
@@ -89,7 +93,6 @@ function draw( ) {
     fctx.moveTo( cx, cy );
     fctx.lineTo( cx, cy );
     fctx.stroke( );
-    
   }
   
   // Draw Fractal
@@ -103,6 +106,27 @@ function draw( ) {
 }
 
 requestAnimationFrame( draw );
+
+function drawTickmarks( consts ) {
+  const { cx, cy, r, s } = consts;
+  fctx.lineWidth = s * 0.75;
+  fctx.strokeStyle = "#fff";
+  for ( let i = 0; i < 12; i++ ) {
+    fctx.beginPath( );
+    fctx.moveTo( cx + r * Math.cos( Math.PI * i / 6 ), cy + r * Math.sin( Math.PI * i / 6 ) );
+    fctx.lineTo( cx + 0.85 * r * Math.cos( Math.PI * i / 6 ), cy + 0.85 * r * Math.sin( Math.PI * i / 6 ) );
+    fctx.stroke( );
+  }
+  
+  fctx.lineWidth = s >> 1;
+  for ( let i = 0; i < 60; i++ ) {
+    if ( i % 5 === 0 ) continue;
+    fctx.beginPath( );
+    fctx.moveTo( cx + r * Math.cos( Math.PI * i / 30 ), cy + r * Math.sin( Math.PI * i / 30 ) );
+    fctx.lineTo( cx + 0.9 * r * Math.cos( Math.PI * i / 30 ), cy + 0.9 * r * Math.sin( Math.PI * i / 30 ) );
+    fctx.stroke( );
+  }
+}
 
 function drawFractalClock( consts, scale, sx, sy, angle ) {
   const { hour_angle, minute_angle, r, s } = consts;
@@ -166,7 +190,7 @@ window.toggleOptionsMenu = ( ) => {
 window.toggleClock = e => {
   showClock = !showClock;
   store_options( );
-}
+};
 
 window.setHyperspeedSpeed = e => {
   let n = +e.value;
@@ -204,11 +228,17 @@ window.setFractalOpacity = e => {
   store_options( );
 };
 
+window.toggleTickmarks = e => {
+  showTickmarks = !showTickmarks;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
   detail = opts.detail ?? 10;
   showClock = opts.showClock ?? true;
+  showTickmarks = opts.showTickmarks ?? false;
   clockOpacity = opts.clockOpacity ?? 25;
   fractalOpacity = opts.fractalOpacity ?? 35;
   store_options( );
@@ -217,7 +247,7 @@ function load_options( ) {
 load_options( );
 
 function store_options( ) {
-  const opts = { h_speed, detail, showClock, clockOpacity, fractalOpacity };
+  const opts = { h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
   document.querySelector( ".iDetail" ).value = detail;
@@ -227,6 +257,7 @@ function store_options( ) {
   document.querySelector( ":root" ).style.setProperty( "--clockOpacity", clockOpacity + "%" );
   document.querySelector( ".iFractalOpacity" ).value = fractalOpacity;
   document.querySelector( ":root" ).style.setProperty( "--fractalOpacity", fractalOpacity + "%" );
+  document.querySelector( ".bToggleTickmarks > span" ).innerText = showTickmarks ? "hide" : "show";
   l_sec = null; // To force the image to update
 }
 
@@ -236,5 +267,6 @@ window.resetOptions = ( ) => {
   showClock = true;
   clockOpacity = 25;
   fractalOpacity = 35;
+  showTickmarks = false;
   store_options( );
 };

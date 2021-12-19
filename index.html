@@ -18,7 +18,8 @@
         <span>Hyperspeed Speedup: </span><input type="number" class="big iH_speed" value="1000" min="1" max="10000" step="1" oninput="setHyperspeedSpeed(this);"></input><span>x</span><br/>
         <button onclick="toggleClock(this);" class="bToggleClock"><span>hide</span></button><span> clock</span><br/>
         <div class="clockOptions">
-          <span>Clock Opacity: </span><input type="number" class="small iClockOpacity" value="25" min="0" max="100" step="1" oninput="setClockOpacity(this);"></input><span>%</span>
+          <span>Clock Opacity: </span><input type="number" class="small iClockOpacity" value="25" min="0" max="100" step="1" oninput="setClockOpacity(this);"></input><span>%</span><br/>
+          <button onclick="toggleTickmarks(this);" class="bToggleTickmarks"><span>show</span></button> tickmarks
         </div>
         <span>Fractal Opacity: </span><input type="number" class="small iFractalOpacity" value="35" min="0" max="100" step="1" oninput="setFractalOpacity(this);"></input><span>%</span><br/>
         <button onclick="resetOptions();"><span>reset</span></button>
