@@ -1,5 +1,8 @@
 :root {
   --bg-color-angle: 3.927rad;
+  --t-s: min(2vw, 2vh);
+  --clockOpacity: 25%;
+  --fractalOpacity: 35%;
 }
 
 body, body * {
@@ -17,18 +20,17 @@ body {
   position: absolute;
   inset: 0;
   display: block;
-  opacity: 25%;
+  opacity: var(--clockOpacity);
 }
 
 .back {
   position: absolute;
   inset: 0;
   display: block;
-  opacity: 35%;
+  opacity: var(--fractalOpacity);
 }
 
 a {
-  --t-s: 2vw;
   position: absolute;
   display: inline-block;
   color: white;
@@ -67,3 +69,54 @@ a:is(:hover, :focus-within) {
   right: calc(0.5 * var(--t-s));
   bottom: calc(0.5 * var(--t-s));
 }
+
+.optionsContainer {
+  position: absolute;
+  display: inline-block;
+  right: calc(0.5 * var(--t-s));
+  top: calc(0.5 * var(--t-s));
+  text-align: right;
+}
+
+.optionsButton {
+  position: unset;
+}
+
+.optionsPane {
+  display: block;
+  color: white;
+  font-size: calc(2 * var(--t-s));
+}
+
+.optionsPane div {
+  display: block;
+}
+
+.optionsPane > span, .optionsPane div > span {
+  opacity: 20%;
+}
+
+.optionsPane input[type=number] {
+  text-align: left;
+  opacity: 80%;
+}
+
+.optionsPane input.small {
+  width: 5ch;
+}
+
+.optionsPane input.big {
+  width: 7ch;
+}
+
+.optionsPane button {
+  opacity: 80%;
+  cursor: pointer;
+}
+
+.optionsPane button:not(:is(:focus-within, :hover)) span {
+  opacity: 20%;
+}
+
+.optionsPane button::before { content: "["; opacity: 80%; }
+.optionsPane button::after { content: "]"; opacity: 80%; }

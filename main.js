@@ -9,11 +9,17 @@ const bctx = bcnv.getContext( "2d" );
 
 let width, height;
 
-let hyperspeed = false, h_start = 0;
+let hyperspeed = false, h_speed = 1000, h_start = 0;
+
+let showClock = true;
+
+let detail = 10;
+
+let clockOpacity = 25, fractalOpacity = 35;
 
 let l_sec;
 function draw( ) {
-  const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * 1000 ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
+  const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
   const n_sec = date.getSeconds( );
   if ( n_sec === l_sec ) {
     requestAnimationFrame( draw );
@@ -29,58 +35,62 @@ function draw( ) {
   const cx = width / 2;
   const cy = height / 2;
   
-  // Draw the Circle
-  fctx.strokeStyle = "#fff";
-  fctx.lineWidth = s;
-  fctx.lineCap = "round";
-  fctx.lineJoin = "round";
-  
-  fctx.beginPath( );
-  fctx.arc( cx, cy, r, 0, 2 * Math.PI );
-  fctx.stroke( );
-  
   const second_angle = 2 * Math.PI * date.getSeconds( ) / 60;
   const minute_angle = 2 * Math.PI * date.getMinutes( ) / 60 + second_angle / 60;
   const hour_angle   = 2 * Math.PI * ( date.getHours( ) % 12 ) / 12 + minute_angle / 12;
   
-  // Minute Hand
-  fctx.beginPath( );
-  fctx.moveTo( cx + r * -0.15 * Math.cos( minute_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( minute_angle - Math.PI / 2 ) );
-  fctx.lineTo( cx + r * 0.85 * Math.cos( minute_angle - Math.PI / 2 ), cy + r * 0.85 * Math.sin( minute_angle - Math.PI / 2 ) );
-  fctx.stroke( );
-  
-  // Hour Hand
-  fctx.beginPath( );
-  fctx.moveTo( cx + r * -0.15 * Math.cos( hour_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( hour_angle - Math.PI / 2 ) );
-  fctx.lineTo( cx + r * 0.65 * Math.cos( hour_angle - Math.PI / 2 ), cy + r * 0.65 * Math.sin( hour_angle - Math.PI / 2 ) );
-  fctx.stroke( );
-  
-  // Pivot Circle
-  fctx.lineWidth = s << 1;
-  fctx.beginPath( );
-  fctx.moveTo( cx, cy );
-  fctx.lineTo( cx, cy );
-  fctx.stroke( );
-  
-  // Second Hand
-  fctx.strokeStyle = "#f88";
-  fctx.lineWidth = s >> 1;
-  fctx.beginPath( );
-  fctx.moveTo( cx + r * -0.3 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.3 * Math.sin( second_angle - Math.PI / 2 ) );
-  fctx.lineTo( cx + r * 0.9 * Math.cos( second_angle - Math.PI / 2 ), cy + r * 0.9 * Math.sin( second_angle - Math.PI / 2 ) );
-  fctx.stroke( );
-  
-  fctx.lineWidth = s;
-  fctx.beginPath( );
-  fctx.moveTo( cx + r * -0.35 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.35 * Math.sin( second_angle - Math.PI / 2 ) );
-  fctx.lineTo( cx + r * -0.15 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( second_angle - Math.PI / 2 ) );
-  fctx.stroke( );
-  
-  fctx.lineWidth = s;
-  fctx.beginPath( );
-  fctx.moveTo( cx, cy );
-  fctx.lineTo( cx, cy );
-  fctx.stroke( );
+  if ( showClock ) {
+    
+    // Draw the Circle
+    fctx.strokeStyle = "#fff";
+    fctx.lineWidth = s;
+    fctx.lineCap = "round";
+    fctx.lineJoin = "round";
+    
+    fctx.beginPath( );
+    fctx.arc( cx, cy, r, 0, 2 * Math.PI );
+    fctx.stroke( );
+    
+    // Minute Hand
+    fctx.beginPath( );
+    fctx.moveTo( cx + r * -0.15 * Math.cos( minute_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( minute_angle - Math.PI / 2 ) );
+    fctx.lineTo( cx + r * 0.85 * Math.cos( minute_angle - Math.PI / 2 ), cy + r * 0.85 * Math.sin( minute_angle - Math.PI / 2 ) );
+    fctx.stroke( );
+    
+    // Hour Hand
+    fctx.beginPath( );
+    fctx.moveTo( cx + r * -0.15 * Math.cos( hour_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( hour_angle - Math.PI / 2 ) );
+    fctx.lineTo( cx + r * 0.65 * Math.cos( hour_angle - Math.PI / 2 ), cy + r * 0.65 * Math.sin( hour_angle - Math.PI / 2 ) );
+    fctx.stroke( );
+    
+    // Pivot Circle
+    fctx.lineWidth = s << 1;
+    fctx.beginPath( );
+    fctx.moveTo( cx, cy );
+    fctx.lineTo( cx, cy );
+    fctx.stroke( );
+    
+    // Second Hand
+    fctx.strokeStyle = "#f88";
+    fctx.lineWidth = s >> 1;
+    fctx.beginPath( );
+    fctx.moveTo( cx + r * -0.3 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.3 * Math.sin( second_angle - Math.PI / 2 ) );
+    fctx.lineTo( cx + r * 0.9 * Math.cos( second_angle - Math.PI / 2 ), cy + r * 0.9 * Math.sin( second_angle - Math.PI / 2 ) );
+    fctx.stroke( );
+    
+    fctx.lineWidth = s;
+    fctx.beginPath( );
+    fctx.moveTo( cx + r * -0.35 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.35 * Math.sin( second_angle - Math.PI / 2 ) );
+    fctx.lineTo( cx + r * -0.15 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( second_angle - Math.PI / 2 ) );
+    fctx.stroke( );
+    
+    fctx.lineWidth = s;
+    fctx.beginPath( );
+    fctx.moveTo( cx, cy );
+    fctx.lineTo( cx, cy );
+    fctx.stroke( );
+    
+  }
   
   // Draw Fractal
   bctx.clearRect( 0, 0, width, height );
@@ -97,7 +107,7 @@ requestAnimationFrame( draw );
 function drawFractalClock( consts, scale, sx, sy, angle ) {
   const { hour_angle, minute_angle, r, s } = consts;
   const w = s * 1 / ( 1.3 ** scale );
-  if ( w < 1 ) return;
+  if ( w < 10 / detail ) return;
   
   const ha = angle + hour_angle;
   const [ hx, hy ] = [
@@ -140,6 +150,91 @@ window.hyperspeed = ( ) => {
     hyperspeed = false;
   } else {
     hyperspeed = true;
-    h_start = +( new Date( ) ) - ( +( new Date( ) ) * 1000 ) % ( 1000 * 60 * 60 * 24 );
+    h_start = +( new Date( ) ) - ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 );
   }
+};
+
+window.toggleOptionsMenu = ( ) => {
+  const e = document.querySelector( ".optionsPane" );
+  if ( e.style.display === "none" ) {
+    e.style.display = "";
+  } else {
+    e.style.display = "none";
+  }
+};
+
+window.toggleClock = e => {
+  showClock = !showClock;
+  store_options( );
+}
+
+window.setHyperspeedSpeed = e => {
+  let n = +e.value;
+  if ( n !== n ) n = 1000;
+  if ( n < 1 ) n = 1;
+  if ( n > 10000 ) n = 10000;
+  h_speed = n;
+  store_options( );
+};
+
+window.setDetail = e => {
+  let n = +e.value;
+  if ( n !== n ) n = 10;
+  if ( n < 1 ) n = 1;
+  if ( n > 50 ) n = 50;
+  detail = n;
+  store_options( );
+};
+
+window.setClockOpacity = e => {
+  let n = +e.value;
+  if ( n !== n ) n = 25;
+  if ( n < 0 ) n = 0;
+  if ( n > 100 ) n = 100;
+  clockOpacity = n;
+  store_options( );
+};
+
+window.setFractalOpacity = e => {
+  let n = +e.value;
+  if ( n !== n ) n = 25;
+  if ( n < 0 ) n = 0;
+  if ( n > 100 ) n = 100;
+  fractalOpacity = n;
+  store_options( );
+};
+
+function load_options( ) {
+  const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
+  h_speed = opts.h_speed ?? 1000;
+  detail = opts.detail ?? 10;
+  showClock = opts.showClock ?? true;
+  clockOpacity = opts.clockOpacity ?? 25;
+  fractalOpacity = opts.fractalOpacity ?? 35;
+  store_options( );
+}
+
+load_options( );
+
+function store_options( ) {
+  const opts = { h_speed, detail, showClock, clockOpacity, fractalOpacity };
+  localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
+  document.querySelector( ".iH_speed" ).value = h_speed;
+  document.querySelector( ".iDetail" ).value = detail;
+  document.querySelector( ".bToggleClock > span" ).innerText = showClock ? "hide" : "show";
+  document.querySelector( ".clockOptions" ).style.display = showClock ? "" : "none";
+  document.querySelector( ".iClockOpacity" ).value = clockOpacity;
+  document.querySelector( ":root" ).style.setProperty( "--clockOpacity", clockOpacity + "%" );
+  document.querySelector( ".iFractalOpacity" ).value = fractalOpacity;
+  document.querySelector( ":root" ).style.setProperty( "--fractalOpacity", fractalOpacity + "%" );
+  l_sec = null; // To force the image to update
+}
+
+window.resetOptions = ( ) => {
+  h_speed = 1000;
+  detail = 10;
+  showClock = true;
+  clockOpacity = 25;
+  fractalOpacity = 35;
+  store_options( );
 };
