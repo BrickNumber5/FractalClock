@@ -32,7 +32,7 @@ body {
   opacity: var(--fractalOpacity);
 }
 
-a {
+a, .aish {
   position: absolute;
   display: inline-block;
   color: white;
@@ -42,7 +42,7 @@ a {
   transition: opacity 0.1s;
 }
 
-a::after {
+a::after, .aish::after {
   content: "";
   display: block;
   position: relative;
@@ -54,11 +54,11 @@ a::after {
   background-color: white;
 }
 
-a:is(:hover, :focus-within)::after {
+a:is(:hover, :focus-visible)::after, .aish:is(:hover, :focus-visible)::after {
   width: 100%;
 }
 
-a:is(:hover, :focus-within) {
+a:is(:hover, :focus-visible), .aish:is(:hover, :focus-visible) {
   opacity: 100%;
 }
 
@@ -98,6 +98,11 @@ a:is(:hover, :focus-within) {
   opacity: 20%;
 }
 
+.optionsPane ::selection {
+  color: hsl(var(--fg-color-angle) 100% 50%);
+  background-color: white;
+}
+
 .optionsPane input[type=number] {
   text-align: left;
   opacity: 80%;
@@ -116,7 +121,7 @@ a:is(:hover, :focus-within) {
   cursor: pointer;
 }
 
-.optionsPane button:not(:is(:focus-within, :hover)) span {
+.optionsPane button:not(:is(:focus-visible, :hover)) span {
   opacity: 20%;
 }
 
