@@ -7,6 +7,7 @@
 
 body, body * {
   all: unset;
+  font-family: 'Open Sans', sans-serif;
 }
 
 body {
@@ -102,11 +103,11 @@ a:is(:hover, :focus-within) {
 }
 
 .optionsPane input.small {
-  width: 5ch;
+  width: 4ch;
 }
 
 .optionsPane input.big {
-  width: 7ch;
+  width: 5ch;
 }
 
 .optionsPane button {
