@@ -19,10 +19,8 @@
   <body>
     <canvas class="back"></canvas>
     <canvas class="front"></canvas>
-    <a class="githubButton" href="https://github.com/BrickNumber5/FractalClock" target="_blank">GitHub</a>
-    <a class="hyperspeedButton" href="javascript:void(hyperspeed());">Hyperspeed</a>
     <div class="optionsContainer">
-      <a class="optionsButton" href="javascript:void(toggleOptionsMenu());">[options]</a>
+      <button class="optionsButton aish" onclick="toggleOptionsMenu();">[options]</button>
       <div class="optionsPane" style="display: none;">
         <span>Detail: </span><input type="number" class="small iDetail" value="10" min="1" max="50" step="1" onchange="setDetail(this);"></input><br/>
         <span>Hyperspeed Speedup: </span><input type="number" class="big iH_speed" value="1000" min="1" max="10000" step="1" onchange="setHyperspeedSpeed(this);"></input><span>x</span><br/>
@@ -49,5 +47,7 @@
         <button onclick="resetOptions();"><span>reset</span></button>
       </div>
     </div>
+    <a class="githubButton" href="https://github.com/BrickNumber5/FractalClock" target="_blank">GitHub</a>
+    <button class="hyperspeedButton aish" onclick="hyperspeed();">Hyperspeed</button>
   </body>
 </html>
