@@ -387,8 +387,10 @@ onresize( );
 window.hyperspeed = ( ) => {
   if ( hyperspeed ) {
     hyperspeed = false;
+    document.querySelector( ".hyperspeedButton" ).innerText = "Hyperspeed";
   } else {
     hyperspeed = true;
+    document.querySelector( ".hyperspeedButton" ).innerText = "\xA0\xA0\xA0\xA0\xA0\xA0> > >\xA0\xA0\xA0\xA0\xA0\xA0";
     h_start = +( new Date( ) ) - ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 );
   }
 };
