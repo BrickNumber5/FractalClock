@@ -23,10 +23,11 @@
         <div class="clockOptions">
           <span>Ring Thickness: </span><input type="number" class="small iRingThickness" value="60" min="0" max="100" step="1" onchange="setRingThickness(this);"></input><span>%</span><br/>
           <button onclick="toggleTickmarks();" class="bToggleTickmarks"><span>show</span></button><span> tickmarks</span><br/>
-          <button onclick="toggleNumbers(this);" class="bToggleNumbers"><span>show</span></button><span> numbers</span>
+          <button onclick="toggleNumbers(this);" class="bToggleNumbers"><span>show</span></button><span> numbers</span><br/>
           <div class="dNumberMode" style="display: none;">
             <span>Switch to </span><button onclick="toggleNumberMode(this);" class="bToggleNumberMode"><span>arabic</span></button><span> numerals</span>
           </div>
+          <button onclick="toggleSecondHand();" class="bToggleSecondHand"><span>hide</span></button><span> second hand</span>
         </div>
         <button onclick="toggleDigital();" class="bToggleDigital"><span>show</span></button><span> digital display</span><br/>
         <div class="dDigitalMode" style="display: none;">

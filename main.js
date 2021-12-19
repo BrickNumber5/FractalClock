@@ -13,7 +13,7 @@ let width, height;
 
 let hyperspeed = false, h_speed = 1000, h_start = 0;
 
-let showClock = true;
+let showClock = true, showSecondHand = true;
 
 let detail = 10;
 
@@ -90,24 +90,26 @@ function draw( ) {
     if ( showNumbers ) drawNumbers( { cx, cy, r, s } );
     
     // Second Hand
-    fctx.strokeStyle = "#f88";
-    fctx.lineWidth = s >> 1;
-    fctx.beginPath( );
-    fctx.moveTo( cx + r * -0.3 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.3 * Math.sin( second_angle - Math.PI / 2 ) );
-    fctx.lineTo( cx + r * 0.9 * Math.cos( second_angle - Math.PI / 2 ), cy + r * 0.9 * Math.sin( second_angle - Math.PI / 2 ) );
-    fctx.stroke( );
-    
-    fctx.lineWidth = s;
-    fctx.beginPath( );
-    fctx.moveTo( cx + r * -0.35 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.35 * Math.sin( second_angle - Math.PI / 2 ) );
-    fctx.lineTo( cx + r * -0.15 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( second_angle - Math.PI / 2 ) );
-    fctx.stroke( );
-    
-    fctx.lineWidth = s;
-    fctx.beginPath( );
-    fctx.moveTo( cx, cy );
-    fctx.lineTo( cx, cy );
-    fctx.stroke( );
+    if ( showSecondHand ) {
+      fctx.strokeStyle = "#f88";
+      fctx.lineWidth = s >> 1;
+      fctx.beginPath( );
+      fctx.moveTo( cx + r * -0.3 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.3 * Math.sin( second_angle - Math.PI / 2 ) );
+      fctx.lineTo( cx + r * 0.9 * Math.cos( second_angle - Math.PI / 2 ), cy + r * 0.9 * Math.sin( second_angle - Math.PI / 2 ) );
+      fctx.stroke( );
+      
+      fctx.lineWidth = s;
+      fctx.beginPath( );
+      fctx.moveTo( cx + r * -0.35 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.35 * Math.sin( second_angle - Math.PI / 2 ) );
+      fctx.lineTo( cx + r * -0.15 * Math.cos( second_angle - Math.PI / 2 ), cy + r * -0.15 * Math.sin( second_angle - Math.PI / 2 ) );
+      fctx.stroke( );
+      
+      fctx.lineWidth = s;
+      fctx.beginPath( );
+      fctx.moveTo( cx, cy );
+      fctx.lineTo( cx, cy );
+      fctx.stroke( );
+    }
   }
   
   if ( showDigital ) drawDigitalDisplay( { cx, cy, r, s, date } );
@@ -537,6 +539,11 @@ window.toggleDigitalSeconds = e => {
   store_options( );
 };
 
+window.toggleSecondHand = e => {
+  showSecondHand = !showSecondHand;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
@@ -552,6 +559,7 @@ function load_options( ) {
   ringThickness = opts.ringThickness ?? 60;
   backgroundMode = opts.backgroundMode ?? 0;
   showDigitalSeconds = opts.showDigitalSeconds ?? true;
+  showSecondHand = opts.showSecondHand ?? true;
   store_options( );
 }
 
@@ -571,7 +579,8 @@ function store_options( ) {
     digitalMode,
     ringThickness,
     backgroundMode,
-    showDigitalSeconds
+    showDigitalSeconds,
+    showSecondHand
   };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
@@ -593,6 +602,7 @@ function store_options( ) {
   document.querySelector( ".bToggleBackgroundMode > span" ).innerText = backgroundMode ? "colorful" : "grey";
   document.body.style.setProperty( "background", backgroundMode ? "linear-gradient(24deg, hsl(0 0% 5%) 0%, hsl(0 0% 15%) 100%)" : "" );
   document.querySelector( ".bToggleDigitalSeconds > span" ).innerText = showDigitalSeconds ? "hide" : "show";
+  document.querySelector( ".bToggleSecondHand > span" ).innerText = showSecondHand ? "hide" : "show";
   l_sec = null; // To force the image to update
 }
 
@@ -610,6 +620,7 @@ window.resetOptions = ( ) => {
   ringThickness = 60;
   backgroundMode = 0;
   showDigitalSeconds = true;
+  showSecondHand = true;
   store_options( );
 };
 
