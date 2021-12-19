@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="styles.css"></link>
     <script type="module" src="main.js"></script>
     <link rel="icon" href="icon.png"></link>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
   </head>
   <body>
     <canvas class="back"></canvas>
@@ -19,7 +22,11 @@
         <button onclick="toggleClock(this);" class="bToggleClock"><span>hide</span></button><span> clock</span><br/>
         <div class="clockOptions">
           <span>Clock Opacity: </span><input type="number" class="small iClockOpacity" value="25" min="0" max="100" step="1" oninput="setClockOpacity(this);"></input><span>%</span><br/>
-          <button onclick="toggleTickmarks(this);" class="bToggleTickmarks"><span>show</span></button> tickmarks
+          <button onclick="toggleTickmarks(this);" class="bToggleTickmarks"><span>show</span></button><span> tickmarks</span><br/>
+          <button onclick="toggleNumbers(this);" class="bToggleNumbers"><span>show</span></button><span> numbers</span>
+          <div class="dNumberMode" style="display: none;">
+            <span>Switch to </span><button onclick="toggleNumberMode(this);" class="bToggleNumberMode"><span>arabic</span></button><span> numerals</span>
+          </div>
         </div>
         <span>Fractal Opacity: </span><input type="number" class="small iFractalOpacity" value="35" min="0" max="100" step="1" oninput="setFractalOpacity(this);"></input><span>%</span><br/>
         <button onclick="resetOptions();"><span>reset</span></button>

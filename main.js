@@ -19,6 +19,8 @@ let clockOpacity = 25, fractalOpacity = 35;
 
 let showTickmarks = false;
 
+let showNumbers = false, numberMode = 0;
+
 let l_sec;
 function draw( ) {
   const date = hyperspeed ? new Date( h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) ) : new Date( );
@@ -74,6 +76,8 @@ function draw( ) {
     
     if ( showTickmarks ) drawTickmarks( { cx, cy, r, s } );
     
+    if ( showNumbers ) drawNumbers( { cx, cy, r, s } );
+    
     // Second Hand
     fctx.strokeStyle = "#f88";
     fctx.lineWidth = s >> 1;
@@ -125,6 +129,33 @@ function drawTickmarks( consts ) {
     fctx.moveTo( cx + r * Math.cos( Math.PI * i / 30 ), cy + r * Math.sin( Math.PI * i / 30 ) );
     fctx.lineTo( cx + 0.9 * r * Math.cos( Math.PI * i / 30 ), cy + 0.9 * r * Math.sin( Math.PI * i / 30 ) );
     fctx.stroke( );
+  }
+}
+
+function drawNumbers( consts ) {
+  const { cx, cy, r, s } = consts;
+  let d = showTickmarks ? 0.65 : 0.8;
+  if ( numberMode === 0 ) {
+    fctx.lineWidth = s * 0.75;
+    fctx.strokeStyle = "#fff";
+    for ( let i = 0; i < 12; i++ ) {
+      fctx.beginPath( );
+      fctx.moveTo( cx + d * r * Math.cos( Math.PI * i / 6 ), cy + d * r * Math.sin( Math.PI * i / 6 ) );
+      fctx.lineTo( cx + d * r * Math.cos( Math.PI * i / 6 ), cy + d * r * Math.sin( Math.PI * i / 6 ) );
+      fctx.stroke( );
+    }
+  } else {
+    fctx.lineWidth = s >> 2;
+    fctx.strokeStyle = "#fff";
+    fctx.fillStyle = "#fff";
+    for ( let i = 0; i < 12; i++ ) {
+      fctx.font = `${ 2.5 * s }px 'Open Sans', sans-serif`; // TODO: Replace
+      fctx.textAlign = "center";
+      fctx.textBaseline = "middle";
+      const x = cx + d * r * Math.cos( Math.PI * i / 6 ), y = cy + d * r * Math.sin( Math.PI * i / 6 )
+      fctx.fillText( ( i + 3 ) % 12 + 1, x, y );
+      fctx.strokeText( ( i + 3 ) % 12 + 1, x, y );
+    }
   }
 }
 
@@ -233,21 +264,33 @@ window.toggleTickmarks = e => {
   store_options( );
 };
 
+window.toggleNumbers = e => {
+  showNumbers = !showNumbers;
+  store_options( );
+};
+
+window.toggleNumberMode = e => {
+  numberMode = 1 - numberMode;
+  store_options( );
+};
+
 function load_options( ) {
   const opts = JSON.parse( localStorage.getItem( "FractalClock" ) ?? "{}" );
   h_speed = opts.h_speed ?? 1000;
   detail = opts.detail ?? 10;
   showClock = opts.showClock ?? true;
   showTickmarks = opts.showTickmarks ?? false;
+  showNumbers = opts.showNumbers ?? false;
   clockOpacity = opts.clockOpacity ?? 25;
   fractalOpacity = opts.fractalOpacity ?? 35;
+  numberMode = opts.numberMode ?? 0;
   store_options( );
 }
 
 load_options( );
 
 function store_options( ) {
-  const opts = { h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks };
+  const opts = { h_speed, detail, showClock, clockOpacity, fractalOpacity, showTickmarks, showNumbers, numberMode };
   localStorage.setItem( "FractalClock", JSON.stringify( opts ) );
   document.querySelector( ".iH_speed" ).value = h_speed;
   document.querySelector( ".iDetail" ).value = detail;
@@ -258,6 +301,9 @@ function store_options( ) {
   document.querySelector( ".iFractalOpacity" ).value = fractalOpacity;
   document.querySelector( ":root" ).style.setProperty( "--fractalOpacity", fractalOpacity + "%" );
   document.querySelector( ".bToggleTickmarks > span" ).innerText = showTickmarks ? "hide" : "show";
+  document.querySelector( ".bToggleNumbers > span" ).innerText = showNumbers ? "hide" : "show";
+  document.querySelector( ".dNumberMode" ).style.display = showNumbers ? "" : "none";
+  document.querySelector( ".bToggleNumberMode > span" ).innerText = numberMode ? "roman" : "arabic";
   l_sec = null; // To force the image to update
 }
 
@@ -268,5 +314,7 @@ window.resetOptions = ( ) => {
   clockOpacity = 25;
   fractalOpacity = 35;
   showTickmarks = false;
+  showNumbers = false;
+  numberMode = 0;
   store_options( );
 };
