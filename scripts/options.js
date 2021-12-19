@@ -35,7 +35,7 @@ window.setHyperspeedSpeed = e => {
   if ( n !== n ) n = 1000;
   if ( n < 1 ) n = 1;
   if ( n > 10000 ) n = 10000;
-  h_start = h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) - ( +( new Date( ) ) * n ) % ( 1000 * 60 * 60 * 24 );
+  indirect.h_start = indirect.h_start + ( +( new Date( ) ) * h_speed ) % ( 1000 * 60 * 60 * 24 ) - ( +( new Date( ) ) * n ) % ( 1000 * 60 * 60 * 24 );
   h_speed = n;
   store_options( );
 };
